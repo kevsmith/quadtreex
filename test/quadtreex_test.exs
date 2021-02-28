@@ -1,8 +1,8 @@
-defmodule QuadtreexTest do
+defmodule Quadtreex.QuadtreexTest do
   use ExUnit.Case
-  doctest Quadtreex
 
-  test "greets the world" do
-    assert Quadtreex.hello() == :world
+  test "create tree" do
+    {:ok, t} = Quadtreex.new({0, 0}, {25, 25}, 5.0, 10)
+    assert 0 = Quadtreex.height(t)
   end
 end

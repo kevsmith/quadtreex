@@ -3,14 +3,16 @@ defmodule Quadtreex.MixProject do
 
   def project do
     [
+      aliases: aliases(),
       app: :quadtreex,
+      deps: deps(),
       description: "Pure Elixir quadtree",
-      version: "0.5.0",
       elixir: "~> 1.11",
-      start_permanent: Mix.env() == :prod,
+      elixirc_options: [warnings_as_errors: true],
       package: [licenses: ["MIT"], links: %{}],
-      deps: [],
-      source_url: "https://github.com/kevsmith/quadtreex"
+      source_url: "https://github.com/kevsmith/quadtreex",
+      start_permanent: Mix.env() == :prod,
+      version: "0.1.0"
     ]
   end
 
@@ -19,5 +21,17 @@ defmodule Quadtreex.MixProject do
     [
       extra_applications: [:logger]
     ]
+  end
+
+  def deps do
+    [
+      {:credo, "~> 1.5.5", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.1.0", only: [:dev, :test], runtime: false},
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
+    ]
+  end
+
+  defp aliases() do
+    [c: ["credo", "compile", "dialyzer"]]
   end
 end
