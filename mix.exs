@@ -5,6 +5,7 @@ defmodule Quadtreex.MixProject do
     [
       aliases: aliases(),
       app: :quadtreex,
+      consolidate_protocols: Mix.env() != :dev,
       deps: deps(),
       description: "Pure Elixir quadtree",
       elixir: "~> 1.11",
