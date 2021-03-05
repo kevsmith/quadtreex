@@ -97,4 +97,8 @@ defmodule Quadtreex.BoundingBox do
   def distance_from(%__MODULE__{center: {cx, cy}}, {x, y}, :center) do
     :math.sqrt(:math.pow(cy - y, 2) + :math.pow(cx - x, 2))
   end
+
+  def distance_between({x1, y1}, {x2, y2}) do
+    :math.sqrt(:math.pow(y2 - y1, 2) + :math.pow(x2 - x1, 2))
+  end
 end

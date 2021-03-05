@@ -1,17 +1,3 @@
-defmodule Quadtreex.Node.Entity do
-  @moduledoc """
-  A thing contained within a quadtree node
-  """
-  alias Quadtreex.BoundingBox
-
-  defstruct location: nil, thing: nil
-
-  @type t() :: %__MODULE__{
-          location: BoundingBox.coordinate(),
-          thing: term()
-        }
-end
-
 defmodule Quadtreex.Node do
   @moduledoc """
   A node in a quadtree
@@ -19,7 +5,7 @@ defmodule Quadtreex.Node do
   A quadtree node represents a bounded volume of 2 dimensional space.
   """
   alias Quadtreex.BoundingBox
-  alias Quadtreex.Node.Entity
+  alias Quadtreex.Entity
 
   defstruct parent: nil, bbox: nil, min_size: 0.0, split_size: 0, children: %{}, entities: []
 
