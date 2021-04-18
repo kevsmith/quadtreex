@@ -27,7 +27,7 @@ defmodule Quadtreex do
   end
 
   @spec query(t(), tree_query(), reducer()) :: term()
-  def query(tree, query, fun) do
+  def query(tree, query, fun \\ fn item, acc -> [item | acc] end) do
     result = reduce(tree, query, fun)
     result.accum
   end
@@ -45,6 +45,17 @@ defmodule Quadtreex do
 
       error ->
         error
+    end
+  end
+
+  @spec delete(t(), term()) :: {:ok, boolean(), t()}
+  def delete(%__MODULE__{root: root} = tree, thing) do
+    case Node.delete(root, thing) do
+      {:ok, true, root} ->
+        {:ok, true, %{tree | root: root}}
+
+      {:ok, false, _root} ->
+        {:ok, false, tree}
     end
   end
 

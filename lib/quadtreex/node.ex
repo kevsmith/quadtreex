@@ -80,6 +80,21 @@ defmodule Quadtreex.Node do
     end
   end
 
+  @spec delete(t(), term()) :: {:ok, boolean(), t()}
+  def delete(%__MODULE__{} = node, thing) do
+    if Enum.empty?(node.children) do
+      updated_entities = Enum.filter(node.entities, fn e -> e.thing != thing end)
+
+      if updated_entities != node.entities do
+        {:ok, true, %{node | entities: updated_entities}}
+      else
+        {:ok, false, node}
+      end
+    else
+      delete_via_children(node, thing)
+    end
+  end
+
   @spec insert(t(), Entity.t()) :: {:ok, t()} | {:error, :out_of_bounds}
   def insert(%__MODULE__{} = node, %Entity{} = entity) do
     if BoundingBox.contains?(node.bbox, entity.location) do
@@ -153,5 +168,31 @@ defmodule Quadtreex.Node do
       sw: new(BoundingBox.for_quadrant(bbox, :sw), options),
       nw: new(BoundingBox.for_quadrant(bbox, :nw), options)
     }
+  end
+
+  defp delete_via_children(%__MODULE__{} = node, thing) do
+    case scan_and_delete(Map.keys(node.children), node.children, thing) do
+      {false, _children} ->
+        {:ok, false, node}
+
+      {true, children} ->
+        {:ok, true, %{node | children: children}}
+    end
+  end
+
+  defp scan_and_delete([], children, _thing) do
+    {false, children}
+  end
+
+  defp scan_and_delete([key | keys], children, thing) do
+    child = Map.fetch!(children, key)
+
+    case delete(child, thing) do
+      {:ok, true, child} ->
+        {true, Map.put(children, key, child)}
+
+      {:ok, false, _child} ->
+        scan_and_delete(keys, children, thing)
+    end
   end
 end

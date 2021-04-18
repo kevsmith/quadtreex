@@ -41,6 +41,31 @@ defmodule Quadtreex.QuadtreexTest do
     assert Enum.empty?(result)
   end
 
+  test "delete on tree w/no child nodes works" do
+    {:ok, t} = Quadtreex.new({0, 0}, {128, 128}, 5, 10)
+    {:ok, t} = Quadtreex.insert(t, {10, 10}, "hello")
+    {:ok, t} = Quadtreex.insert(t, {100, 30}, "goodbye")
+    assert {:ok, true, t} = Quadtreex.delete(t, "hello")
+    result = Quadtreex.query(t, %WithinRangeQuery{location: {10, 10}, distance: 0, accum: []})
+    assert Enum.empty?(result)
+    assert {:ok, false, _} = Quadtreex.delete(t, "wubba")
+  end
+
+  test "delete on tree w/children works" do
+    {:ok, t} = Quadtreex.new({0, 0}, {128, 128}, 5, 3)
+    {:ok, t} = Quadtreex.insert(t, {10, 10}, "h")
+    {:ok, t} = Quadtreex.insert(t, {20, 20}, "e")
+    {:ok, t} = Quadtreex.insert(t, {30, 30}, "l")
+    {:ok, t} = Quadtreex.insert(t, {40, 40}, "l")
+    {:ok, t} = Quadtreex.insert(t, {50, 50}, "o")
+    result = Quadtreex.query(t, %WithinRangeQuery{location: {30, 30}, distance: 14.15})
+    assert Enum.count(result) == 3
+    assert {:ok, true, t} = Quadtreex.delete(t, "l")
+    result = Quadtreex.query(t, %WithinRangeQuery{location: {30, 30}, distance: 15})
+    assert Enum.count(result) == 2
+    assert {:ok, false, _} = Quadtreex.delete(t, "g")
+  end
+
   defp make_tree(x_max, y_max) do
     min_width = x_max / 10
     max_entities = 10
