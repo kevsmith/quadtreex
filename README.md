@@ -1,6 +1,6 @@
 # Quadtreex
 
-**TODO: Add description**
+Pure Elixir quadtree implementation
 
 ## Installation
 
