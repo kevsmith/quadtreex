@@ -13,7 +13,7 @@ defmodule Quadtreex.MixProject do
       package: [licenses: ["MIT"], links: %{}],
       source_url: "https://github.com/kevsmith/quadtreex",
       start_permanent: Mix.env() == :prod,
-      version: "0.2.0"
+      version: "0.2.1"
     ]
   end
 
